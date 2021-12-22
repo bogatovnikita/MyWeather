@@ -1,7 +1,8 @@
-package com.bogatovnikita.myweather
+package com.bogatovnikita.myweather.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.bogatovnikita.myweather.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
