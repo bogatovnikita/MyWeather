@@ -31,14 +31,24 @@ class MainFragment : Fragment() {
         viewModel.getWeatherFromServer()
     }
 
-    fun renderData(appState: AppState) {
+    private fun renderData(appState: AppState) {
         when (appState) {
-            AppState.LOADING -> Toast.makeText(requireContext(), "Загрузка", Toast.LENGTH_LONG).show()
-            AppState.SUCCESS -> TODO()
-            AppState.ERROR -> Toast.makeText(requireContext(), "Ошибка", Toast.LENGTH_LONG).show()
+            is AppState.Error -> Toast.makeText(
+                requireContext(),
+                appState.error.message,
+                Toast.LENGTH_LONG
+            ).show()
+            is AppState.Loading -> Toast.makeText(
+                requireContext(),
+                appState.progress.toString(),
+                Toast.LENGTH_LONG
+            ).show()
+            is AppState.Success -> Toast.makeText(
+                requireContext(),
+                appState.weatherData,
+                Toast.LENGTH_LONG
+            ).show()
         }
-
-
     }
 
     override fun onCreateView(
