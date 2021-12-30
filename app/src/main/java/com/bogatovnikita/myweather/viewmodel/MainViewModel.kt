@@ -15,13 +15,28 @@ class MainViewModel(
         return liveData
     }
 
-    fun getWeatherFromServer() {
+    fun getWeatherFromLocalSourceRus() = getWeatherFromServer(true)
+    fun getWeatherFromLocalSourceWorld() = getWeatherFromServer(true)
+
+
+    fun getWeatherFromServer(isRussian: Boolean) {
         liveData.postValue(AppState.Loading(0))
         Thread {
             sleep(2000)
-            val rand = (1..40).random()
-            if (rand > 20) liveData.postValue(AppState.Success(repo.getWeatherFromServer()))
-            else liveData.postValue(AppState.Error(IllegalAccessException()))
+            val rand = (1..10).random()
+            if (rand >= 9) {
+                liveData.postValue(
+                    AppState.Success(
+                        if (isRussian) {
+                            repo.getWeatherFromLocalStorageRus()
+                        } else {
+                            repo.getWeatherFromLocalStorageWorld()
+                        }
+                    )
+                )
+            } else {
+                liveData.postValue(AppState.Error(IllegalAccessException()))
+            }
         }.start()
     }
 }
