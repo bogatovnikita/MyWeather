@@ -1,4 +1,4 @@
-package com.bogatovnikita.myweather.view
+package com.bogatovnikita.myweather.view.main
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.ActivityMainBinding
+import com.bogatovnikita.myweather.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
