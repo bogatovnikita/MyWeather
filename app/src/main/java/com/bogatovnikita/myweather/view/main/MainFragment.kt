@@ -22,6 +22,8 @@ class MainFragment : Fragment() {
         }
 
     private lateinit var viewModel: MainViewModel
+    private val adapter = MainFragmentAdapter()
+    private var isRussian = true;
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,26 +31,34 @@ class MainFragment : Fragment() {
         //провайдер создает только один экземляр конкретного хранилища, чтобы избежать утечки памяти
         //observer подписывает объект на обновление данных в livedata, отслеживает жизненый цикл фрагмента
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
-        viewModel.getWeatherFromServer()
+
+        binding.mainFragmentFAB.setOnClickListener {
+            sentRequest()
+            isRussian = !isRussian
+        }
+    }
+
+    private fun sentRequest() {
+        if (isRussian) {
+            viewModel.getWeatherFromLocalSourceRus()
+        } else {
+            viewModel.getWeatherFromLocalSourceWorld()
+        }
     }
 
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainView, R.string.error, Snackbar.LENGTH_LONG)
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
                     .setAction(R.string.try_again) {
-                        viewModel.getWeatherFromServer()
+                        sentRequest()
                     }.show()
             }
-            is AppState.Loading -> binding.loadingLayout.visibility = View.VISIBLE
+            is AppState.Loading -> binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
             is AppState.Success -> {
-                binding.loadingLayout.visibility = View.GONE
-                binding.cityName.text = appState.weatherData.city.name
-                binding.cityCoordinates.text =
-                    "${appState.weatherData.city.lat} ${appState.weatherData.city.lon}"
-                binding.temperatureValue.text = appState.weatherData.temperature.toString()
-                binding.feelsLikeValue.text = appState.weatherData.feelsLike.toString()
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                adapter.setWeather(appState.weatherData)
             }
         }
     }
