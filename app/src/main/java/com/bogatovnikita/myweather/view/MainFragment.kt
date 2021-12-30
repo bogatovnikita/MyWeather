@@ -1,12 +1,13 @@
 package com.bogatovnikita.myweather.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentMainBinding
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.MainViewModel
@@ -35,8 +36,8 @@ class MainFragment : Fragment() {
         when (appState) {
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainView, "Error", Snackbar.LENGTH_LONG)
-                    .setAction("Попробуйте еще раз") {
+                Snackbar.make(binding.mainView, R.string.error, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.try_again) {
                         viewModel.getWeatherFromServer()
                     }.show()
             }

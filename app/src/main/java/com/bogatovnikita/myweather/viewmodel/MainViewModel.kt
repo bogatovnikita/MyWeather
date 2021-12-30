@@ -19,7 +19,9 @@ class MainViewModel(
         liveData.postValue(AppState.Loading(0))
         Thread {
             sleep(2000)
-            liveData.postValue(AppState.Success(repo.getWeatherFromServer()))
+            val rand = (1..40).random()
+            if (rand > 20) liveData.postValue(AppState.Success(repo.getWeatherFromServer()))
+            else liveData.postValue(AppState.Error(IllegalAccessException()))
         }.start()
     }
 }
