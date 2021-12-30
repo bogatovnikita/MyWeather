@@ -9,11 +9,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentMainBinding
+import com.bogatovnikita.myweather.model.Weather
+import com.bogatovnikita.myweather.view.details.BUNDLE_KEY
+import com.bogatovnikita.myweather.view.details.DetailsFragment
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), OnMyItemClickListener {
 
     private var _binding: FragmentMainBinding? = null
     private val binding: FragmentMainBinding
@@ -22,8 +25,8 @@ class MainFragment : Fragment() {
         }
 
     private lateinit var viewModel: MainViewModel
-    private val adapter = MainFragmentAdapter()
-    private var isRussian = true;
+    private val adapter = MainFragmentAdapter(this)
+    private var isRussian = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,17 +35,23 @@ class MainFragment : Fragment() {
         //observer подписывает объект на обновление данных в livedata, отслеживает жизненый цикл фрагмента
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
 
+        binding.mainFragmentRecyclerView.adapter = adapter
+
+        viewModel.getWeatherFromLocalSourceRus()
+
         binding.mainFragmentFAB.setOnClickListener {
             sentRequest()
-            isRussian = !isRussian
         }
     }
 
     private fun sentRequest() {
+        isRussian = !isRussian
         if (isRussian) {
             viewModel.getWeatherFromLocalSourceRus()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
         } else {
             viewModel.getWeatherFromLocalSourceWorld()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
         }
     }
 
@@ -78,5 +87,13 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onItemClick(weather: Weather) {
+        val bundle = Bundle()
+        bundle.putParcelable(BUNDLE_KEY, weather)
+        requireActivity().supportFragmentManager.beginTransaction()
+            .add(R.id.main_activity_container, DetailsFragment.newInstance(bundle))
+            .addToBackStack("").commit()
     }
 }

@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.model.Weather
 
-class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
+class MainFragmentAdapter(val listener: OnMyItemClickListener) :
+    RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
 
     private var weatherData: List<Weather> = listOf()
 
@@ -34,11 +35,11 @@ class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHol
         return weatherData.size
     }
 
-    class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(weather: Weather) {
             itemView.findViewById<AppCompatTextView>(R.id.mainFragmentRecyclerItemTextView).text =
                 weather.city.name
-            itemView.setOnClickListener {}
+            itemView.setOnClickListener { listener.onItemClick(weather) }
         }
     }
 }
