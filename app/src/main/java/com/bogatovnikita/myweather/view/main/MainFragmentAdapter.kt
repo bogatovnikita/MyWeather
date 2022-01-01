@@ -37,9 +37,11 @@ class MainFragmentAdapter(val listener: OnMyItemClickListener) :
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(weather: Weather) {
-            itemView.findViewById<AppCompatTextView>(R.id.mainFragmentRecyclerItemTextView).text =
-                weather.city.name
-            itemView.setOnClickListener { listener.onItemClick(weather) }
+            with(itemView) {
+                findViewById<AppCompatTextView>(R.id.mainFragmentRecyclerItemTextView).text =
+                    weather.city.name
+                setOnClickListener { listener.onItemClick(weather) }
+            }
         }
     }
 }
