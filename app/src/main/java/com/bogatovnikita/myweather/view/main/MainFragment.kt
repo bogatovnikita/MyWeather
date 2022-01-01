@@ -24,50 +24,62 @@ class MainFragment : Fragment(), OnMyItemClickListener {
             return _binding!!
         }
 
-    private lateinit var viewModel: MainViewModel
-    private val adapter = MainFragmentAdapter(this)
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
+    //провайдер создает только один экземляр конкретного хранилища, чтобы избежать утечки памяти
+
+    private val adapter: MainFragmentAdapter by lazy { MainFragmentAdapter(this) }
     private var isRussian = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        //провайдер создает только один экземляр конкретного хранилища, чтобы избежать утечки памяти
+        initView()
         //observer подписывает объект на обновление данных в livedata, отслеживает жизненый цикл фрагмента
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
-
-        binding.mainFragmentRecyclerView.adapter = adapter
-
         viewModel.getWeatherFromLocalSourceRus()
+    }
 
-        binding.mainFragmentFAB.setOnClickListener {
-            sentRequest()
+    private fun initView() {
+        with(binding) {
+            mainFragmentFAB.setOnClickListener {
+                sentRequest()
+            }
+            mainFragmentRecyclerView.adapter = adapter
         }
     }
 
     private fun sentRequest() {
         isRussian = !isRussian
-        if (isRussian) {
-            viewModel.getWeatherFromLocalSourceRus()
-            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
-        } else {
-            viewModel.getWeatherFromLocalSourceWorld()
-            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+        with(binding) {
+            with(viewModel) {
+                if (isRussian) {
+                    getWeatherFromLocalSourceRus()
+                    mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+                } else {
+                    getWeatherFromLocalSourceWorld()
+                    mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+                }
+            }
         }
     }
 
     private fun renderData(appState: AppState) {
-        when (appState) {
-            is AppState.Error -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.try_again) {
-                        sentRequest()
-                    }.show()
-            }
-            is AppState.Loading -> binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
-            is AppState.Success -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                adapter.setWeather(appState.weatherData)
+        with(binding) {
+            when (appState) {
+                is AppState.Error -> {
+                    mainFragmentLoadingLayout.visibility = View.GONE
+                    Snackbar.make(root, R.string.error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.try_again) {
+                            sentRequest()
+                        }.show()
+                }
+                is AppState.Loading -> mainFragmentLoadingLayout.visibility = View.VISIBLE
+                is AppState.Success -> {
+                    mainFragmentLoadingLayout.visibility = View.GONE
+                    adapter.setWeather(appState.weatherData)
+                    Snackbar.make(root, R.string.success, Snackbar.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -90,10 +102,12 @@ class MainFragment : Fragment(), OnMyItemClickListener {
     }
 
     override fun onItemClick(weather: Weather) {
-        val bundle = Bundle()
-        bundle.putParcelable(BUNDLE_KEY, weather)
-        requireActivity().supportFragmentManager.beginTransaction()
-            .add(R.id.main_activity_container, DetailsFragment.newInstance(bundle))
-            .addToBackStack("").commit()
+        activity?.run {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.main_activity_container, DetailsFragment.newInstance(Bundle().apply {
+                    putParcelable(BUNDLE_KEY, weather)
+                }))
+                .addToBackStack("").commit()
+        }
     }
 }
