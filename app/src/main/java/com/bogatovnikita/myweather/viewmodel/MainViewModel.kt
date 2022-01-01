@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.bogatovnikita.myweather.model.RepositoryImplemented
 import java.lang.Thread.sleep
 
-class MainViewModel() : ViewModel() {
+class MainViewModel : ViewModel() {
 
     private val liveData: MutableLiveData<AppState> by lazy { MutableLiveData() }
     private val repo: RepositoryImplemented by lazy { RepositoryImplemented() }
