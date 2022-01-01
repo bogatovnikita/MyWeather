@@ -1,5 +1,6 @@
 package com.bogatovnikita.myweather.view.main
 
+import android.app.Notification
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -69,16 +70,16 @@ class MainFragment : Fragment(), OnMyItemClickListener {
             when (appState) {
                 is AppState.Error -> {
                     mainFragmentLoadingLayout.visibility = View.GONE
-                    Snackbar.make(root, R.string.error, Snackbar.LENGTH_LONG)
+                    Snackbar.make(root,R.string.error, Snackbar.LENGTH_LONG)
                         .setAction(R.string.try_again) {
                             sentRequest()
-                        }.show()
+                        }
                 }
                 is AppState.Loading -> mainFragmentLoadingLayout.visibility = View.VISIBLE
                 is AppState.Success -> {
                     mainFragmentLoadingLayout.visibility = View.GONE
                     adapter.setWeather(appState.weatherData)
-                    Snackbar.make(root, R.string.success, Snackbar.LENGTH_LONG).show()
+                    root.withoutAction(R.string.success, Snackbar.LENGTH_LONG)
                 }
             }
         }
@@ -109,5 +110,9 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                 }))
                 .addToBackStack("").commit()
         }
+    }
+
+    private fun View.withoutAction(text: Int, leinghtShow: Int) {
+        Snackbar.make(this, text, leinghtShow).show()
     }
 }
