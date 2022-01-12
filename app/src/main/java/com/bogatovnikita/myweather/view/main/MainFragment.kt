@@ -23,6 +23,7 @@ class MainFragment : Fragment(), OnMyItemClickListener {
         get() {
             return _binding!!
         }
+
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
