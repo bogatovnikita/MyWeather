@@ -69,10 +69,12 @@ class MainFragment : Fragment(), OnMyItemClickListener {
             when (appState) {
                 is AppState.Error -> {
                     mainFragmentLoadingLayout.visibility = View.GONE
-                    Snackbar.make(root,R.string.error, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.try_again) {
-                            sentRequest()
-                        }
+                    root.setWithoutAction(
+                        (R.string.error),
+                        (R.string.try_again),
+                        { sentRequest() },
+                        Snackbar.LENGTH_LONG
+                    )
                 }
                 is AppState.Loading -> mainFragmentLoadingLayout.visibility = View.VISIBLE
                 is AppState.Success -> {
@@ -113,5 +115,14 @@ class MainFragment : Fragment(), OnMyItemClickListener {
 
     private fun View.withoutAction(text: Int, leinghtShow: Int) {
         Snackbar.make(this, text, leinghtShow).show()
+    }
+
+    private fun View.setWithoutAction(
+        text: Int,
+        actionText: Int,
+        action: (View) -> Unit,
+        leinghtShow: Int
+    ) {
+        Snackbar.make(this, text, leinghtShow).setAction(actionText, action).show()
     }
 }
