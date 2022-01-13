@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId "com.bogatovnikita.myweather"
-        minSdk 23
+        minSdk 24
         targetSdk 31
         versionCode 1
         versionName "1.0"

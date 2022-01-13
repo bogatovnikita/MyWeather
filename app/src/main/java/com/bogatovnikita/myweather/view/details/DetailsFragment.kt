@@ -1,16 +1,22 @@
 package com.bogatovnikita.myweather.view.details
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentDetailsBinding
 import com.bogatovnikita.myweather.model.Weather
+import com.bogatovnikita.myweather.model.WeatherDTO
+import com.bogatovnikita.myweather.utils.WeatherLoader
+import com.google.android.material.snackbar.Snackbar
 
 const val BUNDLE_KEY = "key"
 
-class DetailsFragment : Fragment() {
+class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding: FragmentDetailsBinding
@@ -18,18 +24,31 @@ class DetailsFragment : Fragment() {
             return _binding!!
         }
 
+    private val weatherLoader = WeatherLoader(this)
+    lateinit var localWeather: Weather
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let { it.getParcelable<Weather>(BUNDLE_KEY)?.run { setWeatherData(this) } }
+
+        arguments?.let {
+            it.getParcelable<Weather>(BUNDLE_KEY)?.let {
+                localWeather = it
+                weatherLoader.loadWeather(it.city.lat, it.city.lon)
+            }
+        }
     }
 
-    private fun setWeatherData(weather: Weather) {
+    private fun setWeatherData(weatherDTO: WeatherDTO) {
         with(binding) {
-            cityName.text = weather.city.name
-            cityCoordinates.text =
-                "${weather.city.lat} ${weather.city.lon}"
-            temperatureValue.text = "${weather.temperature}"
-            feelsLikeValue.text = "${weather.feelsLike}"
+            with(localWeather) {
+                cityName.text = city.name
+                cityCoordinates.text =
+                    "${city.lat} ${city.lon}"
+                temperatureValue.text = "${weatherDTO.fact.temp}"
+                feelsLikeValue.text = "${weatherDTO.fact.feelsLike}"
+            }
+
         }
     }
 
@@ -48,5 +67,18 @@ class DetailsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onLoaded(weatherDTO: WeatherDTO?) {
+        weatherDTO?.let {
+            setWeatherData(weatherDTO)
+        }
+    }
+
+    override fun onFailed(weatherDTO: WeatherDTO) {
+        Snackbar.make(requireView(), R.string.error, Snackbar.LENGTH_LONG)
+            .setAction(R.string.try_again) {
+                View.OnClickListener { onLoaded(weatherDTO) }
+            }.show()
     }
 }
