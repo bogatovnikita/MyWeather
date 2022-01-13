@@ -14,8 +14,7 @@ import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
 class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
-    //lateinit var weatherDTO: WeatherDTO
-    //lateinit var httpsURLConnection: HttpsURLConnection
+    private lateinit var weatherDTO: WeatherDTO
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun loadWeather(lat: Double, lon: Double) {
@@ -29,7 +28,7 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
                 }
                 val bufferedReader =
                     BufferedReader(InputStreamReader(httpsURLConnection.inputStream))
-                val weatherDTO: WeatherDTO? = Gson().fromJson(
+                weatherDTO = Gson().fromJson(
                     converterBufferedToResult(bufferedReader),
                     WeatherDTO::class.java
                 )
@@ -39,19 +38,16 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
             }.start()
         } catch (e: Exception) {
             e.printStackTrace()
-            //onWeatherLoader.onFailed(weatherDTO)
-        } finally {
-            //httpsURLConnection.disconnect()
+            onWeatherLoader.onFailed(weatherDTO)
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun converterBufferedToResult(bufferedReader: BufferedReader): String {
+    private fun converterBufferedToResult(bufferedReader: BufferedReader): String {
         return bufferedReader.lines().collect(Collectors.joining("\n"))
     }
 
     interface OnWeatherLoader {
         fun onLoaded(weatherDTO: WeatherDTO?)
-        fun onFailed(weatherDTO: WeatherDTO)
+        fun onFailed(weatherDTO: WeatherDTO?)
     }
 }

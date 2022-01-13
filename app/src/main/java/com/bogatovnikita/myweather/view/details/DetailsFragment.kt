@@ -25,7 +25,7 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
         }
 
     private val weatherLoader = WeatherLoader(this)
-    lateinit var localWeather: Weather
+    private lateinit var localWeather: Weather
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
         }
     }
 
-    override fun onFailed(weatherDTO: WeatherDTO) {
+    override fun onFailed(weatherDTO: WeatherDTO?) {
         Snackbar.make(requireView(), R.string.error, Snackbar.LENGTH_LONG)
             .setAction(R.string.try_again) {
                 View.OnClickListener { onLoaded(weatherDTO) }

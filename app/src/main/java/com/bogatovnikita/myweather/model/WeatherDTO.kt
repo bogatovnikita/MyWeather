@@ -97,7 +97,7 @@ data class Part(
     val humidity: Long,
 
     @SerializedName("prec_mm")
-    val precMm: Long,
+    val precMm: Double,
 
     @SerializedName("prec_prob")
     val precProb: Long,
