@@ -14,14 +14,15 @@ import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
 class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
-    private lateinit var weatherDTO: WeatherDTO
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun loadWeather(lat: Double, lon: Double) {
-        try {
-            Thread {
+        Thread {
+            lateinit var httpsURLConnection: HttpsURLConnection
+            lateinit var weatherDTO: WeatherDTO
+            try {
                 val url = URL("https://api.weather.yandex.ru/v2/informers?&lat=$lat&lon=$lon")
-                val httpsURLConnection = (url.openConnection() as HttpsURLConnection).apply {
+                httpsURLConnection = (url.openConnection() as HttpsURLConnection).apply {
                     requestMethod = "GET"
                     readTimeout = 2000
                     addRequestProperty("X-Yandex-API-Key", BuildConfig.WEATHER_API_KEY)
@@ -35,11 +36,13 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
                 Handler(Looper.getMainLooper()).post {
                     onWeatherLoader.onLoaded(weatherDTO)
                 }
-            }.start()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            onWeatherLoader.onFailed(weatherDTO)
-        }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onWeatherLoader.onFailed(weatherDTO)
+            } finally {
+                httpsURLConnection.disconnect()
+            }
+        }.start()
     }
 
     private fun converterBufferedToResult(bufferedReader: BufferedReader): String {
