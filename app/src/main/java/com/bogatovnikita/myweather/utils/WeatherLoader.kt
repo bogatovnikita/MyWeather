@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresApi
 import com.bogatovnikita.myweather.BuildConfig
+import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.model.WeatherDTO
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -25,7 +26,7 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
                 httpsURLConnection = (url.openConnection() as HttpsURLConnection).apply {
                     requestMethod = "GET"
                     readTimeout = 2000
-                    addRequestProperty("X-Yandex-API-Key", BuildConfig.WEATHER_API_KEY)
+                    addRequestProperty(R.string.x_yandex_api_key.toString(), BuildConfig.WEATHER_API_KEY)
                 }
                 val bufferedReader =
                     BufferedReader(InputStreamReader(httpsURLConnection.inputStream))

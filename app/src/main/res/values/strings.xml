@@ -9,5 +9,6 @@
     <string name="error">Ошибка</string>
     <string name="try_again">Попробуйте ещё раз</string>
     <string name="success">Получилось</string>
+    <string name="x_yandex_api_key">X-Yandex-API-Key</string>
 
 </resources>
