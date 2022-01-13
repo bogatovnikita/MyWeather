@@ -1,11 +1,9 @@
 package com.bogatovnikita.myweather.view.details
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentDetailsBinding
@@ -27,7 +25,6 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
     private val weatherLoader = WeatherLoader(this)
     private lateinit var localWeather: Weather
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
