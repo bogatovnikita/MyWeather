@@ -33,7 +33,7 @@ fun getWorldCities(): List<Weather> {
 fun getRussianCities(): List<Weather> {
     return listOf(
         Weather(City("Москва", 55.755826, 37.617299900000035)),
-        Weather(City("Санкт-Петербург", 59.9342802, 30.335098600000038)),
+        Weather(City("Санкт-Петербург", 59.90275, 30.51250)),
         Weather(City("Новосибирск", 55.00835259999999, 82.93573270000002)),
         Weather(City("Екатеринбург", 56.83892609999999, 60.60570250000001)),
         Weather(City("Нижний Новгород", 56.2965039, 43.936059)),

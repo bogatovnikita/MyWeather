@@ -1,11 +1,9 @@
 package com.bogatovnikita.myweather.utils
 
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.annotation.RequiresApi
 import com.bogatovnikita.myweather.BuildConfig
-import com.bogatovnikita.myweather.R
+import com.bogatovnikita.myweather.X_YANDEX_API_KEY
 import com.bogatovnikita.myweather.model.WeatherDTO
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -16,7 +14,6 @@ import javax.net.ssl.HttpsURLConnection
 
 class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun loadWeather(lat: Double, lon: Double) {
         Thread {
             lateinit var httpsURLConnection: HttpsURLConnection
@@ -27,7 +24,7 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
                         requestMethod = "GET"
                         readTimeout = 2000
                         addRequestProperty(
-                            R.string.x_yandex_api_key.toString(),
+                            X_YANDEX_API_KEY,
                             BuildConfig.WEATHER_API_KEY
                         )
                     }
