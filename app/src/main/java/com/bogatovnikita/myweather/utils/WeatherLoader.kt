@@ -20,17 +20,20 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
     fun loadWeather(lat: Double, lon: Double) {
         Thread {
             lateinit var httpsURLConnection: HttpsURLConnection
-            lateinit var weatherDTO: WeatherDTO
             try {
                 val url = URL("https://api.weather.yandex.ru/v2/informers?&lat=$lat&lon=$lon")
-                httpsURLConnection = (url.openConnection() as HttpsURLConnection).apply {
-                    requestMethod = "GET"
-                    readTimeout = 2000
-                    addRequestProperty(R.string.x_yandex_api_key.toString(), BuildConfig.WEATHER_API_KEY)
-                }
+                httpsURLConnection =
+                    (url.openConnection() as HttpsURLConnection).apply {
+                        requestMethod = "GET"
+                        readTimeout = 2000
+                        addRequestProperty(
+                            R.string.x_yandex_api_key.toString(),
+                            BuildConfig.WEATHER_API_KEY
+                        )
+                    }
                 val bufferedReader =
                     BufferedReader(InputStreamReader(httpsURLConnection.inputStream))
-                weatherDTO = Gson().fromJson(
+                val weatherDTO: WeatherDTO? = Gson().fromJson(
                     converterBufferedToResult(bufferedReader),
                     WeatherDTO::class.java
                 )
@@ -39,7 +42,7 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                onWeatherLoader.onFailed(weatherDTO)
+                onWeatherLoader.onFailed()
             } finally {
                 httpsURLConnection.disconnect()
             }
@@ -52,6 +55,6 @@ class WeatherLoader(private val onWeatherLoader: OnWeatherLoader) {
 
     interface OnWeatherLoader {
         fun onLoaded(weatherDTO: WeatherDTO?)
-        fun onFailed(weatherDTO: WeatherDTO?)
+        fun onFailed()
     }
 }

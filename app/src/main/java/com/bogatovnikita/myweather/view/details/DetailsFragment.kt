@@ -36,14 +36,14 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
         }
     }
 
-    private fun setWeatherData(weatherDTO: WeatherDTO) {
+    private fun setWeatherData(weatherDTO: WeatherDTO?) {
         with(binding) {
             with(localWeather) {
                 cityName.text = city.name
                 cityCoordinates.text =
                     "${city.lat} ${city.lon}"
-                temperatureValue.text = "${weatherDTO.fact.temp}"
-                feelsLikeValue.text = "${weatherDTO.fact.feelsLike}"
+                temperatureValue.text = "${weatherDTO?.fact?.temp}"
+                feelsLikeValue.text = "${weatherDTO?.fact?.feelsLike}"
             }
 
         }
@@ -72,10 +72,7 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
         }
     }
 
-    override fun onFailed(weatherDTO: WeatherDTO?) {
-        Snackbar.make(requireView(), R.string.error, Snackbar.LENGTH_LONG)
-            .setAction(R.string.try_again) {
-                View.OnClickListener { onLoaded(weatherDTO) }
-            }.show()
+    override fun onFailed() {
+        Snackbar.make(requireView(), R.string.error, Snackbar.LENGTH_LONG).show()
     }
 }
