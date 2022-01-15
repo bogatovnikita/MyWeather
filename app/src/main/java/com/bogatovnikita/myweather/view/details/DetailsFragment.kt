@@ -1,5 +1,6 @@
 package com.bogatovnikita.myweather.view.details
 
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentDetailsBinding
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.model.WeatherDTO
+import com.bogatovnikita.myweather.utils.MainBroadcastReceiver
 import com.bogatovnikita.myweather.utils.WeatherLoader
 import com.google.android.material.snackbar.Snackbar
 
