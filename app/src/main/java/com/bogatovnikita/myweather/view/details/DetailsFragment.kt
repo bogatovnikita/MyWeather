@@ -9,14 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bogatovnikita.myweather.*
 import com.bogatovnikita.myweather.databinding.FragmentDetailsBinding
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.model.WeatherDTO
-import com.bogatovnikita.myweather.utils.WeatherLoader
-import com.google.android.material.snackbar.Snackbar
 
-class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
+class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding: FragmentDetailsBinding
@@ -24,7 +23,7 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
             return _binding!!
         }
 
-    val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.getParcelableExtra<WeatherDTO>(BUNDLE_KEY_WEATHER)?.let {
                 setWeatherData(it)
@@ -50,7 +49,10 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
                     })
             }
         }
-        requireActivity().registerReceiver(receiver, IntentFilter(BROADCAST_INTENT_KEY))
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            receiver,
+            IntentFilter(BROADCAST_INTENT_KEY)
+        )
     }
 
     private fun setWeatherData(weatherDTO: WeatherDTO?) {
@@ -81,16 +83,6 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        requireActivity().unregisterReceiver(receiver)
-    }
-
-    override fun onLoaded(weatherDTO: WeatherDTO?) {
-        weatherDTO?.let {
-            setWeatherData(weatherDTO)
-        }
-    }
-
-    override fun onFailed() {
-        Snackbar.make(requireView(), R.string.error, Snackbar.LENGTH_LONG).show()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
     }
 }

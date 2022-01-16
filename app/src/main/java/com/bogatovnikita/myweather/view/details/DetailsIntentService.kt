@@ -2,6 +2,7 @@ package com.bogatovnikita.myweather.view.details
 
 import android.app.IntentService
 import android.content.Intent
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bogatovnikita.myweather.*
 import com.bogatovnikita.myweather.model.WeatherDTO
 import com.google.gson.Gson
@@ -42,9 +43,11 @@ class DetailsIntentService(name: String = "") : IntentService(name) {
                 converterBufferedToResult(bufferedReader),
                 WeatherDTO::class.java
             )
-            sendBroadcast(Intent(BROADCAST_INTENT_KEY).apply {
-                putExtra(BUNDLE_KEY_WEATHER, weatherDTO)
-            })
+
+            LocalBroadcastManager.getInstance(applicationContext)
+                .sendBroadcast(Intent(BROADCAST_INTENT_KEY).apply {
+                    putExtra(BUNDLE_KEY_WEATHER, weatherDTO)
+                })
 
         } catch (e: Exception) {
             e.printStackTrace()
