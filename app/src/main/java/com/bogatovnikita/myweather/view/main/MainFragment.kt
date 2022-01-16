@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bogatovnikita.myweather.BUNDLE_KEY
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentMainBinding
 import com.bogatovnikita.myweather.model.Weather
-import com.bogatovnikita.myweather.view.details.BUNDLE_KEY
 import com.bogatovnikita.myweather.view.details.DetailsFragment
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.MainViewModel
