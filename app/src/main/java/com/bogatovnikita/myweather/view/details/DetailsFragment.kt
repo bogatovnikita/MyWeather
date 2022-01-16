@@ -36,8 +36,8 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            it.getParcelable<Weather>(BUNDLE_KEY)?.let {
+        arguments?.let {bundle->
+            bundle.getParcelable<Weather>(BUNDLE_KEY)?.let {it->
                 localWeather = it
                 requireActivity().startService(
                     Intent(
