@@ -1,12 +1,15 @@
 package com.bogatovnikita.myweather.view.details
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bogatovnikita.myweather.BUNDLE_KEY
-import com.bogatovnikita.myweather.R
+import com.bogatovnikita.myweather.*
 import com.bogatovnikita.myweather.databinding.FragmentDetailsBinding
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.model.WeatherDTO
@@ -21,7 +24,14 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
             return _binding!!
         }
 
-    private val weatherLoader = WeatherLoader(this)
+    val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.getParcelableExtra<WeatherDTO>(BUNDLE_KEY_WEATHER)?.let {
+                setWeatherData(it)
+            }
+        }
+    }
+
     private lateinit var localWeather: Weather
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,9 +40,17 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
         arguments?.let {
             it.getParcelable<Weather>(BUNDLE_KEY)?.let {
                 localWeather = it
-                weatherLoader.loadWeather(it.city.lat, it.city.lon)
+                requireActivity().startService(
+                    Intent(
+                        requireActivity(),
+                        DetailsIntentService::class.java
+                    ).apply {
+                        putExtra(BUNDLE_KEY_LAT, it.city.lat)
+                        putExtra(BUNDLE_KEY_LON, it.city.lon)
+                    })
             }
         }
+        requireActivity().registerReceiver(receiver, IntentFilter(BROADCAST_INTENT_KEY))
     }
 
     private fun setWeatherData(weatherDTO: WeatherDTO?) {
@@ -63,6 +81,7 @@ class DetailsFragment : Fragment(), WeatherLoader.OnWeatherLoader {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        requireActivity().unregisterReceiver(receiver)
     }
 
     override fun onLoaded(weatherDTO: WeatherDTO?) {

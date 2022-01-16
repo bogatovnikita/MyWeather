@@ -1,7 +1,10 @@
 package com.bogatovnikita.myweather.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 class WeatherDTO(
     val now: Long,
 
@@ -11,9 +14,9 @@ class WeatherDTO(
     val info: Info,
     val fact: Fact,
     val forecast: Forecast
-)
+) : Parcelable
 
-
+@Parcelize
 data class Fact(
     @SerializedName("obs_time")
     val obsTime: Long,
@@ -45,8 +48,9 @@ data class Fact(
 
     @SerializedName("wind_gust")
     val windGust: Double
-)
+): Parcelable
 
+@Parcelize
 data class Forecast(
     val date: String,
 
@@ -64,8 +68,9 @@ data class Forecast(
     val moonText: String,
 
     val parts: List<Part>
-)
+): Parcelable
 
+@Parcelize
 data class Part(
     @SerializedName("part_name")
     val partName: String,
@@ -113,11 +118,12 @@ data class Part(
 
     val daytime: String,
     val polar: Boolean
-)
+): Parcelable
 
+@Parcelize
 data class Info(
     val url: String,
     val lat: Double,
     val lon: Double
-)
+): Parcelable
 
