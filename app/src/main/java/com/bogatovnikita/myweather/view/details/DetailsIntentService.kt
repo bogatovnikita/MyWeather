@@ -21,7 +21,6 @@ class DetailsIntentService(name: String = "") : IntentService(name) {
                 intent.getDoubleExtra(BUNDLE_KEY_LON, 0.0)
             )
         }
-
     }
 
     private fun loadWeather(lat: Double, lon: Double) {

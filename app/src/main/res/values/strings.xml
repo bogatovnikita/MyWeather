@@ -10,5 +10,10 @@
     <string name="try_again">Попробуйте ещё раз</string>
     <string name="success">Получилось</string>
     <string name="air_plain_mode">Активирован режим \"Самолёт\"</string>
+    <string name="bad_request">Error 400(Bad Request)</string>
+    <string name="unauthorized">Error 401 (Unauthorized)</string>
+    <string name="payment_required">Error 402 (Payment Required)</string>
+    <string name="forbidden">Error 403 (Forbidden)</string>
+    <string name="not_found">Error 404 (Not Found)</string>
 
 </resources>
