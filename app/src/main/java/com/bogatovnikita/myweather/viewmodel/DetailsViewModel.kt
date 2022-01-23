@@ -32,7 +32,8 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppState> = Mutable
             Weather(
                 getDefaultCity(),
                 weatherDTO.fact.temp.toInt(),
-                weatherDTO.fact.feelsLike.toInt()
+                weatherDTO.fact.feelsLike.toInt(),
+                weatherDTO.fact.icon
             )
         )
     }

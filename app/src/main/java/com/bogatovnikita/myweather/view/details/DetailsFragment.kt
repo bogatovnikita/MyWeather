@@ -4,8 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import coil.request.ImageRequest
 import com.bogatovnikita.myweather.BUNDLE_KEY
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentDetailsBinding
@@ -13,6 +18,7 @@ import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.DetailsViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment() {
 
@@ -77,10 +83,27 @@ class DetailsFragment : Fragment() {
             }
 
         }
+
+        headerIcon.load(R.drawable.city_pictures)
+        weatherIcon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg")
     }
 
     private fun View.withoutAction(text: Int, leinghtShow: Int) {
         Snackbar.make(this, text, leinghtShow).show()
+    }
+
+    private fun ImageView.loadUrl(url: String) {
+
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(this@loadUrl.context)) }
+            .build()
+
+        val request = ImageRequest.Builder(this.context)
+            .data(url)
+            .target(this)
+            .build()
+
+        imageLoader.enqueue(request)
     }
 
     override fun onDestroy() {
