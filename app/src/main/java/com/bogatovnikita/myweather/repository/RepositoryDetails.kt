@@ -1,7 +1,7 @@
 package com.bogatovnikita.myweather.repository
 
-import okhttp3.Callback
+import com.bogatovnikita.myweather.model.WeatherDTO
 
 interface RepositoryDetails {
-    fun getWeatherFromServer(url: String, callback: Callback)
+    fun getWeatherFromServer(lat: Double, lon: Double, callback: retrofit2.Callback<WeatherDTO>)
 }

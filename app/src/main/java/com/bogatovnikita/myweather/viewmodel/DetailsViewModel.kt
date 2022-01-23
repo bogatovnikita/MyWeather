@@ -5,16 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.TAG_E
-import com.bogatovnikita.myweather.YANDEX_API_URL
-import com.bogatovnikita.myweather.YANDEX_API_URL_END_POINT
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.model.WeatherDTO
 import com.bogatovnikita.myweather.model.getDefaultCity
 import com.bogatovnikita.myweather.repository.RepositoryDetailsImpl
-import com.google.gson.Gson
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 
 class DetailsViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData()) :
@@ -27,10 +24,7 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppState> = Mutable
     fun getLiveData() = liveData
 
     fun getWeatherFromServer(lat: Double, lon: Double) {
-        repositoryDetailsImpl.getWeatherFromServer(
-            YANDEX_API_URL + YANDEX_API_URL_END_POINT +
-                    "?lat=${lat}&lon=${lon}", callback
-        )
+        repositoryDetailsImpl.getWeatherFromServer(lat, lon, callback)
     }
 
     fun converterDTOtoModel(weatherDTO: WeatherDTO): List<Weather> {
@@ -43,25 +37,15 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppState> = Mutable
         )
     }
 
-    private val callback = object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
+    private val callback = object : Callback<WeatherDTO> {
+        override fun onFailure(call: Call<WeatherDTO>, t: Throwable) {
             throw IOException(R.string.IOE_exception.toString())
         }
 
-        override fun onResponse(call: Call, response: Response) {
+        override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
             if (response.isSuccessful) {
                 response.body()?.let {
-                    val json = it.string()
-                    liveData.postValue(
-                        AppState.Success(
-                            converterDTOtoModel(
-                                Gson().fromJson(
-                                    json,
-                                    WeatherDTO::class.java
-                                )
-                            )
-                        )
-                    )
+                    liveData.postValue(AppState.Success(converterDTOtoModel(it)))
                 }
             } else {
                 when (response.code()) {
