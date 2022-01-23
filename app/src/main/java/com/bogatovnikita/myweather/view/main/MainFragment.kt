@@ -23,7 +23,6 @@ class MainFragment : Fragment(), OnMyItemClickListener {
         get() {
             return _binding!!
         }
-
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
@@ -112,7 +111,6 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                 .addToBackStack("").commit()
         }
     }
-
     private fun View.withoutAction(text: Int, leinghtShow: Int) {
         Snackbar.make(this, text, leinghtShow).show()
     }
