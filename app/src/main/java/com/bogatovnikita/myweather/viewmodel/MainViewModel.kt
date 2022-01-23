@@ -3,16 +3,17 @@ package com.bogatovnikita.myweather.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bogatovnikita.myweather.model.RepositoryImplemented
+import com.bogatovnikita.myweather.repository.RepositoryCityListImpl
 import java.lang.Thread.sleep
 
 class MainViewModel : ViewModel() {
 
     private val liveData: MutableLiveData<AppState> by lazy { MutableLiveData() }
-    private val repo: RepositoryImplemented by lazy { RepositoryImplemented() }
 
     fun getLiveData(): LiveData<AppState> = liveData
-
+    private val repositoryCityListImpl: RepositoryCityListImpl by lazy {
+        RepositoryCityListImpl()
+    }
 
     fun getWeatherFromLocalSourceRus() = getWeatherFromServer(true)
     fun getWeatherFromLocalSourceWorld() = getWeatherFromServer(false)
@@ -26,7 +27,7 @@ class MainViewModel : ViewModel() {
             if (rand >= 2) {
                 liveData.postValue(
                     AppState.Success(
-                        with(repo) {
+                        with(repositoryCityListImpl) {
                             if (isRussian) {
                                 getWeatherFromLocalStorageRus()
                             } else {
