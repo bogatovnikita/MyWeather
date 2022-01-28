@@ -6,13 +6,13 @@ import androidx.room.*
 interface HistoryWeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(entity: HistoryWeatherDao)
+    fun insert(entity: HistoryWeatherEntity)
 
     @Delete
-    fun delete(entity: HistoryWeatherDao)
+    fun delete(entity: HistoryWeatherEntity)
 
     @Update
-    fun update(entity: HistoryWeatherDao)
+    fun update(entity: HistoryWeatherEntity)
 
     @Query("SELECT * FROM table_for_history_weather")
     fun getAllHistoryWeather(): List<HistoryWeatherEntity>

@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Thread { val listWeather = MyApp.getHistoryWeatherDao().getAllHistoryWeather() }.start()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
