@@ -1,9 +1,12 @@
 package com.bogatovnikita.myweather.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.ActivityMainBinding
+import com.bogatovnikita.myweather.view.history.HistoryFragment
 import com.bogatovnikita.myweather.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -13,11 +16,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Thread { val listWeather = MyApp.getHistoryWeatherDao().getAllHistoryWeather() }.start()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.main_activity_container, MainFragment.newInstance()).commit()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_history -> {
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.main_activity_container, HistoryFragment.newInstance()).addToBackStack("").commit()
+            }
+        }
+        return true
     }
 }

@@ -74,6 +74,8 @@ class DetailsFragment : Fragment() {
 
     private fun setWeatherData(weather: Weather) {
         with(binding) {
+            weather.city = localWeather.city
+            viewModel.saveWeather(weather)
             with(localWeather) {
                 cityName.text = city.name
                 cityCoordinates.text =

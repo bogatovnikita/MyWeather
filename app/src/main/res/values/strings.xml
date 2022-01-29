@@ -16,5 +16,6 @@
     <string name="forbidden">Error 403 (Forbidden)</string>
     <string name="not_found">Error 404 (Not Found)</string>
     <string name="IOE_exception">Ошибка доступа к серверу</string>
+    <string name="history">History</string>
 
 </resources>

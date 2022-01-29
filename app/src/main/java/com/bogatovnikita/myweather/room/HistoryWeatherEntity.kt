@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 data class HistoryWeatherEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    val city: String,
     val temperature: Int,
     val feelsLike: Int,
     val icon: String
-) {
-}
+)

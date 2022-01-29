@@ -8,17 +8,25 @@ import com.bogatovnikita.myweather.TAG_E
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.model.WeatherDTO
 import com.bogatovnikita.myweather.model.getDefaultCity
+import com.bogatovnikita.myweather.repository.RepositoryCityListImpl
 import com.bogatovnikita.myweather.repository.RepositoryDetailsImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class DetailsViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData()) :
+class DetailsViewModel(
+    private val liveData: MutableLiveData<AppState> = MutableLiveData(),
+    private val repositoryCityListImpl: RepositoryCityListImpl = RepositoryCityListImpl()
+) :
     ViewModel() {
 
     private val repositoryDetailsImpl: RepositoryDetailsImpl by lazy {
         RepositoryDetailsImpl()
+    }
+
+    fun saveWeather(weather: Weather) {
+        repositoryCityListImpl.saveWeather(weather)
     }
 
     fun getLiveData() = liveData

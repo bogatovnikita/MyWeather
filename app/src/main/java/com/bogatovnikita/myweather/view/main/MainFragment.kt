@@ -28,7 +28,7 @@ class MainFragment : Fragment(), OnMyItemClickListener {
     }
     //провайдер создает только один экземляр конкретного хранилища, чтобы избежать утечки памяти
 
-    private val adapter: MainFragmentAdapter by lazy { MainFragmentAdapter(this) }
+    private val adapter: CitiesAdapter by lazy { CitiesAdapter(this) }
     private var isRussian = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

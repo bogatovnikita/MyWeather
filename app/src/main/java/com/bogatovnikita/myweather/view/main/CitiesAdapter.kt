@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.model.Weather
 
-class MainFragmentAdapter(val listener: OnMyItemClickListener) :
-    RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
+class CitiesAdapter(val listener: OnMyItemClickListener) :
+    RecyclerView.Adapter<CitiesAdapter.MainViewHolder>() {
 
     private var weatherData: List<Weather> = listOf()
 
@@ -21,13 +21,13 @@ class MainFragmentAdapter(val listener: OnMyItemClickListener) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MainFragmentAdapter.MainViewHolder {
+    ): CitiesAdapter.MainViewHolder {
         return MainViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.main_recycler_item, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: MainFragmentAdapter.MainViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CitiesAdapter.MainViewHolder, position: Int) {
         return holder.bind(this.weatherData[position])
     }
 
