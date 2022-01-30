@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.ActivityMainBinding
+import com.bogatovnikita.myweather.other.ContentProviderContactsFragment
 import com.bogatovnikita.myweather.view.history.HistoryFragment
 import com.bogatovnikita.myweather.view.main.MainFragment
 
@@ -32,7 +33,13 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_history -> {
                 supportFragmentManager.beginTransaction()
-                    .add(R.id.main_activity_container, HistoryFragment.newInstance()).addToBackStack("").commit()
+                    .add(R.id.main_activity_container, HistoryFragment.newInstance())
+                    .addToBackStack("").commit()
+            }
+            R.id.menu_contacts -> {
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.main_activity_container, ContentProviderContactsFragment.newInstance())
+                    .addToBackStack("").commit()
             }
         }
         return true
