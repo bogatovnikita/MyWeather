@@ -18,5 +18,9 @@
     <string name="IOE_exception">Ошибка доступа к серверу</string>
     <string name="history">History</string>
     <string name="contacts">Contacts</string>
+    <string name="read_contacts">Доступ к контактам</string>
+    <string name="access_contacts">Для корректной работы приложения, треубется доступ к контактам.</string>
+    <string name="ok">Предоставить доступ</string>
+    <string name="no">Отклонить</string>
 
 </resources>

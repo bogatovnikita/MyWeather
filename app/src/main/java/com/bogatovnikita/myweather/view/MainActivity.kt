@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.ActivityMainBinding
-import com.bogatovnikita.myweather.other.ContentProviderContactsFragment
+import com.bogatovnikita.myweather.contentProvider.ContentProviderContactsFragment
 import com.bogatovnikita.myweather.view.history.HistoryFragment
 import com.bogatovnikita.myweather.view.main.MainFragment
 
