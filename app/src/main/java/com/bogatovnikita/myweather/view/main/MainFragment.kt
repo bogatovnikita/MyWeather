@@ -1,9 +1,9 @@
 package com.bogatovnikita.myweather.view.main
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -11,20 +11,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.bogatovnikita.myweather.*
+import com.bogatovnikita.myweather.BUNDLE_KEY
+import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentMainBinding
+import com.bogatovnikita.myweather.model.City
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.view.details.DetailsFragment
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import androidx.annotation.NonNull
+
+
+
 
 
 class MainFragment : Fragment(), OnMyItemClickListener {
+    val MIN_DISTANCE = 100f
+    val REFRESH_PERIOD = 60000L
+    val REQUEST_CODE_MAIN_FRAGMENT = 25
 
     private var _binding: FragmentMainBinding? = null
     private val binding: FragmentMainBinding
@@ -66,11 +76,9 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     getLocation()
                 }
-
                 shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                    showDialogRation()
+                    showDialogRatio()
                 }
-
                 else -> {
                     myRequestPermission()
                 }
@@ -79,6 +87,16 @@ class MainFragment : Fragment(), OnMyItemClickListener {
     }
 
     private fun getAddress(location: Location) {
+        Thread {
+            val geocoder = Geocoder(requireContext())
+            val listAddress = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            requireActivity().runOnUiThread {
+                showAddressDialog(
+                    listAddress[0].getAddressLine(0),
+                    location
+                )
+            }
+        }.start()
     }
 
     private val locationListener = object : LocationListener {
@@ -86,13 +104,11 @@ class MainFragment : Fragment(), OnMyItemClickListener {
             getAddress(location)
         }
 
-        override fun onProviderDisabled(provider: String) {
-            super.onProviderDisabled(provider)
-        }
+        override fun onProviderEnabled(provider: String) {}
 
-        override fun onProviderEnabled(provider: String) {
-            super.onProviderEnabled(provider)
-        }
+        override fun onProviderDisabled(provider: String) {}
+
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
 
     private fun myRequestPermission() {
@@ -102,11 +118,12 @@ class MainFragment : Fragment(), OnMyItemClickListener {
         )
     }
 
-    private fun onRequestPermissionResult(
+    override fun onRequestPermissionsResult(
         requestCode: Int,
-        permission: Array<out String>,
+        permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_MAIN_FRAGMENT) {
             when {
                 (grantResults[0] == PackageManager.PERMISSION_GRANTED) -> {
@@ -114,13 +131,13 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                 }
 
                 shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                    showDialogRation()
+                    showDialogRatio()
                 }
             }
         }
     }
 
-    private fun showDialogRation() {
+    private fun showDialogRatio() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.dialog_rationale_title)
             .setMessage(R.string.dialog_message_no_gps)
@@ -144,7 +161,9 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                     providerGPS?.let {
                         locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
-                            REFRESH_PERIOD, MIN_DISTANCE, locationListener
+                            REFRESH_PERIOD,
+                            MIN_DISTANCE,
+                            locationListener
                         )
                     }
                 } else {
@@ -154,8 +173,25 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                         getAddress(it)
                     }
                 }
+            } else {
+
             }
         }
+    }
+
+    private fun showAddressDialog(address: String, location: Location) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.dialog_address_title)
+            .setPositiveButton(getString(R.string.dialog_address_get_weather)) { _, _ ->
+                toDetails(
+                    Weather(
+                        City(address, location.latitude, location.longitude)
+                    )
+                )
+            }
+            .setNegativeButton(R.string.dialog_rationale_decline) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 
     private fun sentRequest() {
@@ -213,6 +249,10 @@ class MainFragment : Fragment(), OnMyItemClickListener {
     }
 
     override fun onItemClick(weather: Weather) {
+        toDetails(weather)
+    }
+
+    private fun toDetails(weather: Weather) {
         activity?.run {
             supportFragmentManager.beginTransaction()
                 .add(R.id.main_activity_container, DetailsFragment.newInstance(Bundle().apply {
