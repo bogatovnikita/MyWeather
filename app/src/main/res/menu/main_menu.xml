@@ -10,4 +10,9 @@
         android:id="@+id/menu_contacts"
         android:title="@string/contacts"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_google_maps"
+        android:icon="@drawable/ic_baseline_map_24"
+        app:showAsAction="always" />
 </menu>

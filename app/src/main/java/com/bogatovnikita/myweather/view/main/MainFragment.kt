@@ -25,16 +25,11 @@ import com.bogatovnikita.myweather.view.details.DetailsFragment
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
-import androidx.annotation.NonNull
-
-
-
-
 
 class MainFragment : Fragment(), OnMyItemClickListener {
-    val MIN_DISTANCE = 100f
-    val REFRESH_PERIOD = 60000L
-    val REQUEST_CODE_MAIN_FRAGMENT = 25
+    private val MIN_DISTANCE = 100f
+    private val REFRESH_PERIOD = 60000L
+    private val REQUEST_CODE_MAIN_FRAGMENT = 25
 
     private var _binding: FragmentMainBinding? = null
     private val binding: FragmentMainBinding
@@ -173,8 +168,6 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                         getAddress(it)
                     }
                 }
-            } else {
-
             }
         }
     }

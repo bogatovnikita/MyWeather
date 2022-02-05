@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.contentProvider.ContentProviderContactsFragment
 import com.bogatovnikita.myweather.databinding.ActivityMainBinding
+import com.bogatovnikita.myweather.googleMaps.MapsFragment
 import com.bogatovnikita.myweather.view.history.HistoryFragment
 import com.bogatovnikita.myweather.view.main.MainFragment
 
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             R.id.menu_contacts -> {
                 val fragmentContacts = supportFragmentManager.findFragmentByTag("contacts_fragment")
                 if (fragmentContacts == null) {
@@ -54,6 +56,16 @@ class MainActivity : AppCompatActivity() {
                                 R.id.main_activity_container,
                                 ContentProviderContactsFragment.newInstance(), "contacts_fragment"
                             )
+                            .addToBackStack("").commit()
+                    }
+                }
+            }
+
+            R.id.menu_google_maps -> {
+                val fragmentMaps = supportFragmentManager.findFragmentByTag("maps_fragments")
+                if (fragmentMaps == null) {
+                    supportFragmentManager.apply {
+                        beginTransaction().add(R.id.main_activity_container, MapsFragment())
                             .addToBackStack("").commit()
                     }
                 }
