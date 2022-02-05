@@ -29,7 +29,6 @@ class MyApp : Application() {
                         appInstance!!.applicationContext, HistoryDatabase::class.java,
                         DB_NAME
                     )
-                        .allowMainThreadQueries()
                         .build()
                 }
             }

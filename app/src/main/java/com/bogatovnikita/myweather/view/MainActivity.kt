@@ -5,8 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.bogatovnikita.myweather.R
-import com.bogatovnikita.myweather.databinding.ActivityMainBinding
 import com.bogatovnikita.myweather.contentProvider.ContentProviderContactsFragment
+import com.bogatovnikita.myweather.databinding.ActivityMainBinding
 import com.bogatovnikita.myweather.view.history.HistoryFragment
 import com.bogatovnikita.myweather.view.main.MainFragment
 
@@ -32,14 +32,31 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_history -> {
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.main_activity_container, HistoryFragment.newInstance())
-                    .addToBackStack("").commit()
+                val fragmentHistory = supportFragmentManager.findFragmentByTag("history_fragment")
+                if (fragmentHistory == null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(
+                                R.id.main_activity_container,
+                                HistoryFragment.newInstance(),
+                                "history_fragment"
+                            )
+                            .addToBackStack("").commit()
+                    }
+                }
             }
             R.id.menu_contacts -> {
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.main_activity_container, ContentProviderContactsFragment.newInstance())
-                    .addToBackStack("").commit()
+                val fragmentContacts = supportFragmentManager.findFragmentByTag("contacts_fragment")
+                if (fragmentContacts == null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(
+                                R.id.main_activity_container,
+                                ContentProviderContactsFragment.newInstance(), "contacts_fragment"
+                            )
+                            .addToBackStack("").commit()
+                    }
+                }
             }
         }
         return true

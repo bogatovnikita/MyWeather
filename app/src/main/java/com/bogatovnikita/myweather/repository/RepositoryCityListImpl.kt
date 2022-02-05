@@ -19,7 +19,9 @@ class RepositoryCityListImpl : RepositoryCityList, RepositoryHistoryWeather {
     }
 
     override fun saveWeather(weather: Weather) {
-        MyApp.getHistoryWeatherDao().insert(convertWeatherToHistoryWeatherEntity(weather))
+        Thread {
+            MyApp.getHistoryWeatherDao().insert(convertWeatherToHistoryWeatherEntity(weather))
+        }.start()
     }
 
     private fun convertHistoryWeatherEntityToWeather(entityList: List<HistoryWeatherEntity>): List<Weather> {

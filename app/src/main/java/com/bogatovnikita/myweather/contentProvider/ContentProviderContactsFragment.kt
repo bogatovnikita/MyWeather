@@ -1,7 +1,6 @@
 package com.bogatovnikita.myweather.contentProvider
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -86,7 +85,7 @@ class ContentProviderContactsFragment : Fragment() {
     }
 
     fun getContacts() {
-        context?.let {it->
+        context?.let { it ->
             val contentResolver = it.contentResolver
             val cursor = contentResolver.query(
                 ContactsContract.Contacts.CONTENT_URI,
@@ -112,6 +111,9 @@ class ContentProviderContactsFragment : Fragment() {
             text = name
             textSize = 30f
         })
+        binding.containerForContacts.setOnClickListener {
+
+        }
     }
 
     companion object {

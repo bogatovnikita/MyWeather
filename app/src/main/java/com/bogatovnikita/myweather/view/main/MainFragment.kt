@@ -26,7 +26,6 @@ class MainFragment : Fragment(), OnMyItemClickListener {
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
-    //провайдер создает только один экземляр конкретного хранилища, чтобы избежать утечки памяти
 
     private val adapter: CitiesAdapter by lazy { CitiesAdapter(this) }
     private var isRussian = true
@@ -34,7 +33,6 @@ class MainFragment : Fragment(), OnMyItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        //observer подписывает объект на обновление данных в livedata, отслеживает жизненый цикл фрагмента
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
         viewModel.getWeatherFromLocalSourceRus()
     }
