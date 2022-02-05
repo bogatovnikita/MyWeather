@@ -1,20 +1,28 @@
 package com.bogatovnikita.myweather.view.main
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.bogatovnikita.myweather.BUNDLE_KEY
-import com.bogatovnikita.myweather.R
+import com.bogatovnikita.myweather.*
 import com.bogatovnikita.myweather.databinding.FragmentMainBinding
 import com.bogatovnikita.myweather.model.Weather
 import com.bogatovnikita.myweather.view.details.DetailsFragment
 import com.bogatovnikita.myweather.viewmodel.AppState
 import com.bogatovnikita.myweather.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+
 
 class MainFragment : Fragment(), OnMyItemClickListener {
 
@@ -39,10 +47,114 @@ class MainFragment : Fragment(), OnMyItemClickListener {
 
     private fun initView() {
         with(binding) {
+            mainFragmentRecyclerView.adapter = adapter
             mainFragmentFAB.setOnClickListener {
                 sentRequest()
             }
-            mainFragmentRecyclerView.adapter = adapter
+            mainFragmentFABLocation.setOnClickListener {
+                checkPermission()
+            }
+        }
+    }
+
+    private fun checkPermission() {
+        context?.let {
+            when {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    getLocation()
+                }
+
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                    showDialogRation()
+                }
+
+                else -> {
+                    myRequestPermission()
+                }
+            }
+        }
+    }
+
+    private fun getAddress(location: Location) {
+    }
+
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            getAddress(location)
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            super.onProviderDisabled(provider)
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            super.onProviderEnabled(provider)
+        }
+    }
+
+    private fun myRequestPermission() {
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE_MAIN_FRAGMENT
+        )
+    }
+
+    private fun onRequestPermissionResult(
+        requestCode: Int,
+        permission: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_CODE_MAIN_FRAGMENT) {
+            when {
+                (grantResults[0] == PackageManager.PERMISSION_GRANTED) -> {
+                    getLocation()
+                }
+
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                    showDialogRation()
+                }
+            }
+        }
+    }
+
+    private fun showDialogRation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.dialog_rationale_title)
+            .setMessage(R.string.dialog_message_no_gps)
+            .setPositiveButton(R.string.dialog_rationale_give_access) { _, _ -> myRequestPermission() }
+            .setNegativeButton(R.string.dialog_rationale_decline) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
+
+    private fun getLocation() {
+        activity?.let {
+            if (ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                val locationManager =
+                    it.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    val providerGPS = locationManager.getProvider(LocationManager.GPS_PROVIDER)
+                    providerGPS?.let {
+                        locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            REFRESH_PERIOD, MIN_DISTANCE, locationListener
+                        )
+                    }
+                } else {
+                    val lastLocation =
+                        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    lastLocation?.let {
+                        getAddress(it)
+                    }
+                }
+            }
         }
     }
 
@@ -109,6 +221,7 @@ class MainFragment : Fragment(), OnMyItemClickListener {
                 .addToBackStack("").commit()
         }
     }
+
     private fun View.withoutAction(text: Int, leinghtShow: Int) {
         Snackbar.make(this, text, leinghtShow).show()
     }

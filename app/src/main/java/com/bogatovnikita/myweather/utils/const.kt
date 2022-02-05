@@ -7,4 +7,7 @@ const val YANDEX_API_URL_END_POINT = "v2/informers"
 const val TAG_E = "tag for log.e"
 const val DB_NAME = "History.db"
 const val REQUEST_CODE = 24//com.bogatovnikita.myweather.other.ContentProviderContactsFragment
-const val SHARED_PREF = "MainFragment"
+const val MIN_DISTANCE = 100f//MainFragment
+const val REFRESH_PERIOD = 60000L//MainFragment
+const val REQUEST_CODE_MAIN_FRAGMENT = 25
+
