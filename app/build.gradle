@@ -63,6 +63,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'androidx.room:room-runtime:2.4.1'
     kapt 'androidx.room:room-compiler:2.4.1'
-
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 }

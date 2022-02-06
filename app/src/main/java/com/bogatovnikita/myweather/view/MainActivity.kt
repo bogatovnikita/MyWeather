@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 val fragmentMaps = supportFragmentManager.findFragmentByTag("maps_fragments")
                 if (fragmentMaps == null) {
                     supportFragmentManager.apply {
-                        beginTransaction().add(R.id.main_activity_container, MapsFragment())
+                        beginTransaction().replace(R.id.main_activity_container, MapsFragment(),"maps_fragments")
                             .addToBackStack("").commit()
                     }
                 }
