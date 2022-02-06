@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pushNotification()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -78,59 +77,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    companion object {
-        private const val NOTIFICATION_ID_1 = 1
-        private const val NOTIFICATION_ID_2 = 2
-        private const val CHANNEL_ID_1 = " channel_id_1"
-        private const val CHANNEL_ID_2 = " channel_id_2"
-    }
-
-    private fun pushNotification() {
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val notificationBuilderFirst = NotificationCompat.Builder(this, CHANNEL_ID_1).apply {
-            setSmallIcon(R.drawable.ic_kotlin_logo)
-            setContentTitle(getString(R.string.test_title) + CHANNEL_ID_1)
-            setContentText(getString(R.string.test_text) + CHANNEL_ID_1)
-            priority = NotificationCompat.PRIORITY_MAX
-        }
-
-        val notificationBuilderSecond = NotificationCompat.Builder(this, CHANNEL_ID_2).apply {
-            setSmallIcon(R.drawable.ic_kotlin_logo)
-            setContentTitle(getString(R.string.test_title) + CHANNEL_ID_2)
-            setContentText(getString(R.string.test_text) + CHANNEL_ID_2)
-            priority = NotificationCompat.PRIORITY_DEFAULT
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelNameFirst = (getString(R.string.channel_name) + CHANNEL_ID_1)
-            val channelDescriptionFirst =
-                (getString(R.string.channel_description_priority_max) + CHANNEL_ID_1)
-            val channelPriorityFirst = NotificationManager.IMPORTANCE_HIGH
-
-            val channelFirst =
-                NotificationChannel(CHANNEL_ID_1, channelNameFirst, channelPriorityFirst).apply {
-                    description = channelDescriptionFirst
-                }
-            notificationManager.createNotificationChannel(channelFirst)
-        }
-        notificationManager.notify(NOTIFICATION_ID_1, notificationBuilderFirst.build())
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelNameSecond = (getString(R.string.channel_name) + CHANNEL_ID_2)
-            val channelDescriptionSecond =
-                (getString(R.string.channel_description_priority_default) + CHANNEL_ID_2)
-            val channelPrioritySecond = NotificationManager.IMPORTANCE_DEFAULT
-
-            val channelSecond =
-                NotificationChannel(CHANNEL_ID_2, channelNameSecond, channelPrioritySecond).apply {
-                    description = channelDescriptionSecond
-                }
-            notificationManager.createNotificationChannel(channelSecond)
-        }
-        notificationManager.notify(NOTIFICATION_ID_2, notificationBuilderSecond.build())
     }
 }

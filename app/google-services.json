@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "624884826618",
+    "project_id": "braided-circuit-340412",
+    "storage_bucket": "braided-circuit-340412.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624884826618:android:71919ea241a30e3e0ce443",
+        "android_client_info": {
+          "package_name": "com.bogatovnikita.myweather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624884826618-6h36svbntvpu39soigbv2abcrm3ug782.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0VJLC_T5PxSGz6OFFBXL2p0B8NSFqQ1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624884826618-6h36svbntvpu39soigbv2abcrm3ug782.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
