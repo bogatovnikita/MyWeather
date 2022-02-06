@@ -83,7 +83,6 @@ class MapsFragment : Fragment() {
             }
         }.start()
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
