@@ -5,13 +5,11 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.databinding.FragmentGoogleMapsMainBinding
+import com.bogatovnikita.myweather.view.BaseFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -21,14 +19,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 
-class MapsFragment : Fragment() {
-
-    private var _binding: FragmentGoogleMapsMainBinding? = null
-    private val binding: FragmentGoogleMapsMainBinding
-        get() {
-            return _binding!!
-        }
-
+class MapsFragment :
+    BaseFragment<FragmentGoogleMapsMainBinding>(FragmentGoogleMapsMainBinding::inflate) {
 
     private lateinit var map: GoogleMap
     private val markers = arrayListOf<Marker>()
@@ -84,15 +76,6 @@ class MapsFragment : Fragment() {
         }.start()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentGoogleMapsMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -129,10 +112,5 @@ class MapsFragment : Fragment() {
                 )
             }
         }.start()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

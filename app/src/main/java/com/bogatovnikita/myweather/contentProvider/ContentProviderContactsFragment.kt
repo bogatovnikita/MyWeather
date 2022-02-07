@@ -4,34 +4,18 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.bogatovnikita.myweather.R
 import com.bogatovnikita.myweather.REQUEST_CODE
 import com.bogatovnikita.myweather.databinding.FragmentContentProviderContactsBinding
+import com.bogatovnikita.myweather.view.BaseFragment
 
-
-class ContentProviderContactsFragment : Fragment() {
-
-    private var _binding: FragmentContentProviderContactsBinding? = null
-    private val binding: FragmentContentProviderContactsBinding
-        get() {
-            return _binding!!
-        }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentContentProviderContactsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+class ContentProviderContactsFragment :
+    BaseFragment<FragmentContentProviderContactsBinding>(FragmentContentProviderContactsBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -118,10 +102,5 @@ class ContentProviderContactsFragment : Fragment() {
 
     companion object {
         fun newInstance() = ContentProviderContactsFragment()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }
